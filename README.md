@@ -112,6 +112,7 @@ By validating my query data shape according to my frontend's specifications, as 
 ### Validating Performance Locally
 
 **Local K6 Testing**
+
 ![Screen Shot 2022-03-29 at 9 24 47 AM](https://user-images.githubusercontent.com/43115008/160659671-603d8c9d-94c7-4a2a-9243-05368c16d097.png)
 
 ### Deploying and Scaling in AWS
