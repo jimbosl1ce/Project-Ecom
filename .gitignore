@@ -8,3 +8,9 @@ bundle.js.map
 .package.json
 FEC.pem
 coverage
+csv-data
+csv-data/features.csv
+csv-data/photos.csv
+csv-data/product.csv
+csv-data/skus.csv
+csv-data/styles.csv

@@ -14,7 +14,9 @@ const s3 = new aws.S3({
 });
 
 // docs for getSignedUrlPromise
+
 // Here, we retrieve a "signed" url from AWS for us to send our image to:
+
 // https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getSignedUrlPromise-property
 
 function generateUploadURL() {
