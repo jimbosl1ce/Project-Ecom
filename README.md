@@ -122,61 +122,78 @@ At this phase, I had a blast setting up EC2 T2.micros and measuring performance 
 
 **Test 1:**
 Diagram:
+
 ![Screen Shot 2022-03-29 at 10 00 14 AM](https://user-images.githubusercontent.com/43115008/160666013-9a843674-8508-4ca3-a694-91842126d2ac.png)
 
 Results:
+
 ![Screen Shot 2022-03-29 at 10 00 00 AM](https://user-images.githubusercontent.com/43115008/160665966-ecb38898-796c-4994-a787-6714998acd88.png)
 
 Notes: 
+
 Cloud baseline established. While these results weren't as performant as my local K6 testing results, I was happy to have a baseline before moving onto additional architectures.
 
 **Test 2:**
 Diagram:
+
 ![Screen Shot 2022-03-29 at 10 01 52 AM](https://user-images.githubusercontent.com/43115008/160666261-760d8352-a140-43ca-b0e7-80a1a3291dbf.png)
 
 Results:
+
  ![Screen Shot 2022-03-29 at 10 01 35 AM](https://user-images.githubusercontent.com/43115008/160666215-d98391d3-1283-4937-9ca4-aa62c1d0e6e4.png)
  
 Notes:
+
 T2.Micro EC2 instances come with 1 vGPU, which I hypothesized was being put under stress by hosting both the Express server as well as Postgres. I noted a large uptick in performance at 1,000 RPS, however, at the expense of a much higher latency.
 
 **Test 3**
 Diagram:
+
 ![Screen Shot 2022-03-29 at 10 06 40 AM](https://user-images.githubusercontent.com/43115008/160666984-211e25ad-c8b3-4e68-bee2-d367312d80ad.png)
 
 Results:
+
 ![Screen Shot 2022-03-29 at 10 10 49 AM](https://user-images.githubusercontent.com/43115008/160667653-b95fe3b6-e4db-48d2-b75c-63bb5f903514.png)
 
 Notes:
+
 By introducing a NGINX Load Balancer, I was able to increase RPS by an additional 42.9% (Products) and 53.1% (Styles) while reducing latency by 61% (Styles) and 67% (Products). 
 
 While I was excited adjust NGINX's config settings according to suggestions made in their documentation, I was suspect that my PostgreSQL DBMS EC2 bottlenecked performance - particularly because each request shaped a response in JSON via PostreSQL aggregate functions.
 
 **Test 4**
 Diagram:
+
 ![Screen Shot 2022-03-29 at 10 16 33 AM](https://user-images.githubusercontent.com/43115008/160668585-df2d8355-cc50-406b-a64e-4e1a2e238d80.png)
 
 Results:
+
 ![Screen Shot 2022-03-29 at 10 17 02 AM](https://user-images.githubusercontent.com/43115008/160668658-30b1e1a4-4ca6-4b06-ae94-12cb3b1aa851.png)
 
 Notes:
+
 While I saw decent performance gains in STYLES, I decided to continue horizontally scaling given the diminishing returns seen in PRODCUTS. 
 
 **Test 5**
 Diagram:
+
 ![Screen Shot 2022-03-29 at 10 18 42 AM](https://user-images.githubusercontent.com/43115008/160668944-f2d0d9fb-702f-4f9d-b54d-b8621e27b332.png)
 
 Results:
+
 ![Screen Shot 2022-03-29 at 10 19 14 AM](https://user-images.githubusercontent.com/43115008/160669034-6d6a1692-f600-4602-b91f-5954a375845d.png)
 
 Notes:
+
 While building this setup was exciting, I was ultimately dissapointed with only a modest 10% increase in PRODUCTS RPS performance. At this point in time, I focused my attention toward [tuning my NGINX load balancer](https://www.nginx.com/blog/tuning-nginx/). 
 
 **Test 6** - Caching Enabled
 Results:
+
 ![Screen Shot 2022-03-29 at 10 22 12 AM](https://user-images.githubusercontent.com/43115008/160669517-31fa7271-e884-47e9-9e7f-7a585e728466.png)
 
 Notes:
+
 By enabling caching in my NGINX load balancer, I was able to drastically reduce cloud resources while **increasing performance to 3,700 RPS**. Caching reduced server and DBMS stress as well as latency, and drastically improved throughput.
 
 **Final thoughts** 
